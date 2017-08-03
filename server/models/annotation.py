@@ -338,7 +338,50 @@ class AnnotationSchema:
                 'additionalProperties': True,
                 'title': 'Image Attributes',
                 'description': 'Subjective things that apply to the entire '
-                               'image.'
+                               'image.',
+                                'properties': {
+                    'OperatingConditions': {
+                        'type': 'object',
+                        'additionalProperties': False,
+                        'properties': {
+                            'ImageType': {
+                                'type': 'string',
+                                'enum': ['unknown', 'pan', 'ps-rgb', 'ps-rgb-ir',
+                                         'other']
+                            },
+                            'SourceSensor': {
+                                'type': 'string',
+                                'enum': ['unknown', 'geo1', 'qb02', 'multiple',
+                                         'wv01', 'wv02', 'wv03_vnir', 'other']
+                            },
+                            'GSD': {
+                                'type': 'number'
+                            },
+                            'NIIRS': {
+                                'type': 'number'
+                            },
+                            'Off-nadirAngle': {
+                                'type': 'number'
+                            },
+                            'SunElevationAngle': {
+                                'type': 'number'
+                            },
+                            'AcquisitionDateAndTime': {
+                                'type': 'number'
+                            },
+                            'BackgroundComplexity': {
+                                'type': 'string',
+                                'enum': ['unknown', 'rural', 'sparse-build-up',
+                                         'build-up', 'other']
+                            },
+                            'SnowCovered': {
+                                'type': 'string',
+                                'enum': ['unknown', 'no', 'partial', 'yes',
+                                         'other']
+                            },
+                        },
+                    },
+                },
             },
             'elements': {
                 'type': 'array',
