@@ -337,17 +337,17 @@ class AnnotationSchema:
                 'type': 'object',
                 'additionalProperties': True,
                 'title': 'Image Attributes',
-                'description': 'Subjective things that apply to the entire '
-                               'image.',
-                                'properties': {
+                'description':
+                    'Subjective things that apply to the entire image.',
+                'properties': {
                     'OperatingConditions': {
                         'type': 'object',
                         'additionalProperties': False,
                         'properties': {
                             'ImageType': {
                                 'type': 'string',
-                                'enum': ['unknown', 'pan', 'ps-rgb', 'ps-rgb-ir',
-                                         'other']
+                                'enum': ['unknown', 'pan', 'ps-rgb',
+                                         'ps-rgb-ir', 'other']
                             },
                             'SourceSensor': {
                                 'type': 'string',
@@ -360,7 +360,7 @@ class AnnotationSchema:
                             'NIIRS': {
                                 'type': 'number'
                             },
-                            'Off-nadirAngle': {
+                            'OffNadirAngle': {
                                 'type': 'number'
                             },
                             'SunElevationAngle': {

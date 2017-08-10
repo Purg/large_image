@@ -41,6 +41,8 @@ class AnnotationResource(Resource):
         self.route('POST', (), self.createAnnotation)
         self.route('PUT', (':id',), self.updateAnnotation)
         self.route('DELETE', (':id',), self.deleteAnnotation)
+        self.route('GET', (':itemId', 'get_image_level_ocs'),
+                   self.getImageLevelOCs)
 
     @describeRoute(
         Description('Search for annotations.')
@@ -258,3 +260,24 @@ class AnnotationResource(Resource):
                 break
 
         return response
+
+    @describeRoute(
+        Description('Get the image-level operating conditions for an item.')
+        .responseClass('annotation')
+        .param('itemId', 'Get the operating condition annotations for this '
+                         'item id.', paramType='path')
+        .errorResponse()
+        .errorResponse('Read access was denied on the parent item.', 403)
+    )
+    @access.public
+    def getImageLevelOCs(self, itemId, params):
+        # The steps are:
+        # Get the annotation ID (using self.find and the image_level_ocs)
+        # Load the actual annotation object
+        # Return ins OperatingConditions property
+        params['itemId'] = itemId
+        params['name'] = 'image_level_ocs'
+        annot_id = self.find(params)[0]['_id']
+
+        return self.getAnnotation(annot_id, {})['annotation']['attributes'][
+            'OperatingConditions']
