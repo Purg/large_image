@@ -432,6 +432,23 @@ class Annotation(Model):
         # 'stopTime'
     )
 
+    defaultImageLevelOC = {
+        "name": "image_level_ocs",
+        "attributes": {
+            "OperatingConditions": {
+                "ImageType": "unknown",
+                "SourceSensor": "unknown",
+                "GSD": -1,
+                "NIIRS": -1,
+                "OffNadirAngle": -1,
+                "SunElevationAngle": -1,
+                "AcquisitionDateAndTime": -1,
+                "BackgroundComplexity": "unknown",
+                "SnowCovered": "unknown"
+            }
+        }
+    }
+
     def initialize(self):
         self.name = 'annotation'
         self.ensureIndices(['itemId', 'created', 'creatorId'])

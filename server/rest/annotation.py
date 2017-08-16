@@ -25,7 +25,7 @@ from girder.api.describe import describeRoute, Description
 from girder.api.rest import Resource, loadmodel, filtermodel, RestException
 from girder.constants import AccessType, SortDir
 from girder.models.model_base import ValidationException
-from ..models.annotation import AnnotationSchema
+from ..models.annotation import AnnotationSchema, Annotation
 
 
 class AnnotationResource(Resource):
@@ -277,7 +277,18 @@ class AnnotationResource(Resource):
         # Return ins OperatingConditions property
         params['itemId'] = itemId
         params['name'] = 'image_level_ocs'
-        annot_id = self.find(params)[0]['_id']
+        try:
+            annot_id = self.find(params)[0]['_id']
+        except IndexError:
+            # This means there are no annotations with the name
+            # 'image_level_ocs', so we'll create them
+            item = self.model('item').load(itemId, user=self.getCurrentUser())
+
+            annot_id = \
+                self.model('annotation',
+                           'large_image').createAnnotation(
+                    item, self.getCurrentUser(),
+                    Annotation.defaultImageLevelOC)['_id']
 
         return self.getAnnotation(annot_id, {})['annotation']['attributes'][
             'OperatingConditions']
