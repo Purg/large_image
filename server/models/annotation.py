@@ -367,7 +367,7 @@ class AnnotationSchema:
                                 'type': 'number'
                             },
                             'AcquisitionDateAndTime': {
-                                'type': 'number'
+                                'type': 'string'
                             },
                             'BackgroundComplexity': {
                                 'type': 'string',
