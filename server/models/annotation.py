@@ -352,7 +352,7 @@ class AnnotationSchema:
                             },
                             'SourceSensor': {
                                 'type': 'string',
-                                'enum': ['unknown', 'geo1', 'qb02', 'multiple',
+                                'enum': ['unknown', 'ge01', 'qb02', 'multiple',
                                          'wv01', 'wv02', 'wv03_vnir', 'other']
                             },
                             'GSD': {
