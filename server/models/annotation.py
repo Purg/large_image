@@ -443,7 +443,7 @@ class Annotation(Model):
                 "NIIRS": -1,
                 "OffNadirAngle": -1,
                 "SunElevationAngle": -1,
-                "AcquisitionDateAndTime": -1,
+                "AcquisitionDateAndTime": "no date",
                 "BackgroundComplexity": "unknown",
                 "SnowCovered": "unknown"
             }
