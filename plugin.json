@@ -10,7 +10,7 @@
         "dependencies": {
             "hammerjs": "^2.0.8",
             "geojs": "0.12.2",
-            "slideatlas-viewer": "^4.1.0",
+            "slideatlas-viewer": "https://github.com/jonathan-owens/SlideAtlas-viewer#86f266231a1f740a6ebf77ed202b2e8a11158bdb",
             "sinon": "^2.1.0",
             "tinycolor2": "^1.4.1"
         }
