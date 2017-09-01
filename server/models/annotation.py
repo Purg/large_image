@@ -347,8 +347,9 @@ class AnnotationSchema:
                             'ImageType': {
                                 'type': 'string',
                                 'enum': ['unknown', 'Panchromatic',
-                                         'Panchromatic-Sharpened-Natural-Color',
-                                         'ps-rgb-ir', 'other']
+                                         'Pan-Sharpened-Natural-Color',
+                                         'Pan-Sharpened-Color-Infrared',
+                                         'other']
                             },
                             'SourceSensor': {
                                 'type': 'string',
