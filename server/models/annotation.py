@@ -97,6 +97,32 @@ class AnnotationSchema:
             'vector': coordSchema,
             'scalar': {
                 'type': 'number'
+            },
+            'OperatingConditions': {
+                'type': 'object',
+                'additionalProperties': False,
+                'properties': {
+                    'TargetSize': {
+                        'type': 'string',
+                        'enum': ['unknown', 'small', 'medium', 'large']
+                    },
+                    'OcclusionLabels': {
+                        'type': 'string',
+                        'enum': ['unknown', 'none', 'partial', 'full']
+                    },
+                    'IlluminationLabels': {
+                        'type': 'string',
+                        'enum': ['unknown', 'low', 'medium', 'high']
+                    },
+                    'AdjacencyLabels': {
+                        'type': 'string',
+                        'enum': ['unknown', 'no', 'yes']
+                    },
+                    'GlintLabels': {
+                        'type': 'string',
+                        'enum': ['unknown', 'no', 'yes']
+                    }
+                }
             }
         },
         'required': ['type'],
