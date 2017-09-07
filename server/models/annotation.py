@@ -106,19 +106,19 @@ class AnnotationSchema:
                         'type': 'string',
                         'enum': ['unknown', 'small', 'medium', 'large']
                     },
-                    'OcclusionLabels': {
+                    'Occlusion': {
                         'type': 'string',
                         'enum': ['unknown', 'none', 'partial', 'full']
                     },
-                    'IlluminationLabels': {
+                    'Illumination': {
                         'type': 'string',
                         'enum': ['unknown', 'low', 'medium', 'high']
                     },
-                    'AdjacencyLabels': {
+                    'Adjacency': {
                         'type': 'string',
                         'enum': ['unknown', 'no', 'yes']
                     },
-                    'GlintLabels': {
+                    'Glint': {
                         'type': 'string',
                         'enum': ['unknown', 'no', 'yes']
                     }
