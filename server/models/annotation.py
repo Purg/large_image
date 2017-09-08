@@ -102,6 +102,10 @@ class AnnotationSchema:
                 'type': 'object',
                 'additionalProperties': False,
                 'properties': {
+                    'Contrast': {
+                        'type': 'string',
+                        'enum': ['unknown', 'low', 'medium', 'high']
+                    },
                     'TargetSize': {
                         'type': 'string',
                         'enum': ['unknown', 'small', 'medium', 'large']
