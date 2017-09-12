@@ -284,11 +284,24 @@ class AnnotationResource(Resource):
             # 'image_level_ocs', so we'll create them
             item = self.model('item').load(itemId, user=self.getCurrentUser())
 
-            annot_id = \
+            annot = \
                 self.model('annotation',
                            'large_image').createAnnotation(
                     item, self.getCurrentUser(),
-                    Annotation.defaultImageLevelOC)['_id']
+                    Annotation.defaultImageLevelOC)
+            annot_id = annot['_id']
+
+        try:
+            self.getAnnotation(annot_id, {})['annotation'][
+                'attributes']['OperatingConditions']
+        except KeyError:
+            # Update the attributes/OCs if annotation exists in the item but
+            # with no attribute key.
+            updated_annot_obj = self.getAnnotation(annot_id, {})
+            updated_annot_obj['annotation']['attributes'] = \
+                Annotation.defaultImageLevelOC['attributes']
+            self.model('annotation', 'large_image').updateAnnotation(
+                updated_annot_obj, updateUser=self.getCurrentUser())
 
         return self.getAnnotation(annot_id, {})['annotation']['attributes'][
             'OperatingConditions']
