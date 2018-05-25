@@ -17,7 +17,7 @@ var SlideAtlasImageViewerWidget = ImageViewerWidget.extend({
         $.when(
             ImageViewerWidget.prototype.initialize.call(this, settings),
             $.ajax({  // like $.getScript, but allow caching
-                url: staticRoot + '/built/plugins/large_image/extra/slideatlas/sa-all.min.js',
+                url: staticRoot + '/built/plugins/large_image/extra/slideatlas/sa-all.max.js',
                 dataType: 'script',
                 cache: true
             }))
@@ -25,6 +25,11 @@ var SlideAtlasImageViewerWidget = ImageViewerWidget.extend({
     },
 
     render: function () {
+        // render can get clled multiple times
+        if (this.viewer) {
+            return this;
+        }
+
         // If script or metadata isn't loaded, then abort
         if (!window.SA || !this.tileWidth || !this.tileHeight || this.deleted) {
             return this;
@@ -43,25 +48,38 @@ var SlideAtlasImageViewerWidget = ImageViewerWidget.extend({
         // TODO: if a viewer already exists, do we render again?
         // SlideAtlas bundles its own version of jQuery, which should attach itself to "window.$" when it's sourced
         // The "this.$el" still uses the Girder version of jQuery, which will not have "saViewer" registered on it.
-        window.$(this.el).saViewer({
+        var tileSource = {
+            height: this.sizeY,
+            width: this.sizeX,
+            tileWidth: this.tileWidth,
+            tileHeight: this.tileHeight,
+            minLevel: 0,
+            maxLevel: this.levels - 1,
+            units: 'mm',
+            spacing: [this.mm_x, this.mm_y],
+            getTileUrl: (level, x, y, z) => {
+                // Drop the "z" argument
+                return this._getTileUrl(level, x, y);
+            }
+        };
+        if (!this.mm_x) {
+            // tileSource.units = 'pixels';
+            tileSource.spacing = [1, 1];
+        }
+        window.SA.SAViewer(window.$(this.el), {
             zoomWidget: true,
             drawWidget: true,
             prefixUrl: staticRoot + '/built/plugins/large_image/extra/slideatlas/img/',
-            tileSource: {
-                height: this.sizeY,
-                width: this.sizeX,
-                tileSize: this.tileWidth,
-                minLevel: 0,
-                maxLevel: this.levels - 1,
-                getTileUrl: (level, x, y, z) => {
-                    // Drop the "z" argument
-                    return this._getTileUrl(level, x, y);
-                }
-            }
+            tileSource: tileSource
         });
         this.viewer = this.el.saViewer;
+        this.girderGui = new window.SAM.GirderWidget(this.viewer.GetAnnotationLayer(), this.itemId);
+        $(this.el).css({position: 'relative'});
+        window.SA.SAFullScreenButton($(this.el))
+          .css({'position': 'absolute', 'left': '2px', 'top': '2px'});
 
         this.trigger('g:imageRendered', this);
+
         return this;
     },
 

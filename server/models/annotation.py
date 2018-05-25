@@ -93,6 +93,40 @@ class AnnotationSchema:
             'lineWidth': {
                 'type': 'number',
                 'minimum': 0
+            },
+            'vector': coordSchema,
+            'scalar': {
+                'type': 'number'
+            },
+            'OperatingConditions': {
+                'type': 'object',
+                'additionalProperties': False,
+                'properties': {
+                    'Contrast': {
+                        'type': 'string',
+                        'enum': ['unknown', 'low', 'medium', 'high']
+                    },
+                    'TargetSize': {
+                        'type': 'string',
+                        'enum': ['unknown', 'small', 'medium', 'large']
+                    },
+                    'Occlusion': {
+                        'type': 'string',
+                        'enum': ['unknown', 'none', 'partial', 'full']
+                    },
+                    'Illumination': {
+                        'type': 'string',
+                        'enum': ['unknown', 'low', 'medium', 'high']
+                    },
+                    'Adjacency': {
+                        'type': 'string',
+                        'enum': ['unknown', 'no', 'yes']
+                    },
+                    'Glint': {
+                        'type': 'string',
+                        'enum': ['unknown', 'no', 'yes']
+                    }
+                }
             }
         },
         'required': ['type'],
@@ -333,8 +367,53 @@ class AnnotationSchema:
                 'type': 'object',
                 'additionalProperties': True,
                 'title': 'Image Attributes',
-                'description': 'Subjective things that apply to the entire '
-                               'image.'
+                'description':
+                    'Subjective things that apply to the entire image.',
+                'properties': {
+                    'OperatingConditions': {
+                        'type': 'object',
+                        'additionalProperties': False,
+                        'properties': {
+                            'ImageType': {
+                                'type': 'string',
+                                'enum': ['unknown', 'Panchromatic',
+                                         'Pan-Sharpened-Natural-Color',
+                                         'Pan-Sharpened-Color-Infrared',
+                                         'other']
+                            },
+                            'SourceSensor': {
+                                'type': 'string',
+                                'enum': ['unknown', 'ge01', 'qb02', 'multiple',
+                                         'wv01', 'wv02', 'wv03_vnir', 'other']
+                            },
+                            'GSD': {
+                                'type': 'number'
+                            },
+                            'NIIRS': {
+                                'type': 'number'
+                            },
+                            'OffNadirAngle': {
+                                'type': 'number'
+                            },
+                            'SunElevationAngle': {
+                                'type': 'number'
+                            },
+                            'AcquisitionDateAndTime': {
+                                'type': 'string'
+                            },
+                            'BackgroundComplexity': {
+                                'type': 'string',
+                                'enum': ['unknown', 'rural', 'sparse-build-up',
+                                         'build-up', 'other']
+                            },
+                            'SnowCovered': {
+                                'type': 'string',
+                                'enum': ['unknown', 'no', 'partial', 'yes',
+                                         'other']
+                            },
+                        },
+                    },
+                },
             },
             'elements': {
                 'type': 'array',
@@ -384,6 +463,23 @@ class Annotation(Model):
         # 'startTime'
         # 'stopTime'
     )
+
+    defaultImageLevelOC = {
+        "name": "image_level_ocs",
+        "attributes": {
+            "OperatingConditions": {
+                "ImageType": "unknown",
+                "SourceSensor": "unknown",
+                "GSD": -1,
+                "NIIRS": -1,
+                "OffNadirAngle": -1,
+                "SunElevationAngle": -1,
+                "AcquisitionDateAndTime": "no date",
+                "BackgroundComplexity": "unknown",
+                "SnowCovered": "unknown"
+            }
+        }
+    }
 
     def initialize(self):
         self.name = 'annotation'

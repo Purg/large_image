@@ -25,7 +25,7 @@ from girder.api.describe import describeRoute, Description
 from girder.api.rest import Resource, loadmodel, filtermodel, RestException
 from girder.constants import AccessType, SortDir
 from girder.models.model_base import ValidationException
-from ..models.annotation import AnnotationSchema
+from ..models.annotation import AnnotationSchema, Annotation
 
 
 class AnnotationResource(Resource):
@@ -41,6 +41,8 @@ class AnnotationResource(Resource):
         self.route('POST', (), self.createAnnotation)
         self.route('PUT', (':id',), self.updateAnnotation)
         self.route('DELETE', (':id',), self.deleteAnnotation)
+        self.route('GET', (':itemId', 'get_image_level_ocs'),
+                   self.getImageLevelOCs)
 
     @describeRoute(
         Description('Search for annotations.')
@@ -258,3 +260,48 @@ class AnnotationResource(Resource):
                 break
 
         return response
+
+    @describeRoute(
+        Description('Get the image-level operating conditions for an item.')
+        .responseClass('annotation')
+        .param('itemId', 'Get the operating condition annotations for this '
+                         'item id.', paramType='path')
+        .errorResponse()
+        .errorResponse('Read access was denied on the parent item.', 403)
+    )
+    @access.public
+    def getImageLevelOCs(self, itemId, params):
+        # The steps are:
+        # Get the annotation ID (using self.find and the image_level_ocs)
+        # Load the actual annotation object
+        # Return ins OperatingConditions property
+        params['itemId'] = itemId
+        params['name'] = 'image_level_ocs'
+        try:
+            annot_id = self.find(params)[0]['_id']
+        except IndexError:
+            # This means there are no annotations with the name
+            # 'image_level_ocs', so we'll create them
+            item = self.model('item').load(itemId, user=self.getCurrentUser())
+
+            annot = \
+                self.model('annotation',
+                           'large_image').createAnnotation(
+                    item, self.getCurrentUser(),
+                    Annotation.defaultImageLevelOC)
+            annot_id = annot['_id']
+
+        try:
+            self.getAnnotation(annot_id, {})['annotation'][
+                'attributes']['OperatingConditions']
+        except KeyError:
+            # Update the attributes/OCs if annotation exists in the item but
+            # with no attribute key.
+            updated_annot_obj = self.getAnnotation(annot_id, {})
+            updated_annot_obj['annotation']['attributes'] = \
+                Annotation.defaultImageLevelOC['attributes']
+            self.model('annotation', 'large_image').updateAnnotation(
+                updated_annot_obj, updateUser=self.getCurrentUser())
+
+        return self.getAnnotation(annot_id, {})['annotation']['attributes'][
+            'OperatingConditions']

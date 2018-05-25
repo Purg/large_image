@@ -7,13 +7,15 @@ var ImageViewerWidget = View.extend({
 
         return restRequest({
             type: 'GET',
-            path: 'item/' + this.itemId + '/tiles'
+            url: 'item/' + this.itemId + '/tiles'
         }).done((resp) => {
             this.levels = resp.levels;
             this.tileWidth = resp.tileWidth;
             this.tileHeight = resp.tileHeight;
             this.sizeX = resp.sizeX;
             this.sizeY = resp.sizeY;
+            this.mm_x = resp.mm_x;
+            this.mm_y = resp.mm_y;
         });
     },
 
